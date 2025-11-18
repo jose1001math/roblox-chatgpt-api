@@ -6,10 +6,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// pega a chave da OpenAI da variável de ambiente
+// pega a chave da OpenAI das variáveis do Railway
 const apiKey = process.env.OPENAI_API_KEY;
 
-// log pra debug (só no servidor, o Roblox não vê isso)
 if (!apiKey) {
   console.error("⚠️ OPENAI_API_KEY NÃO ESTÁ DEFINIDA NAS VARIÁVEIS DO RAILWAY.");
 }
@@ -19,12 +18,11 @@ if (apiKey) {
   client = new OpenAI({ apiKey });
 }
 
-// rota que o Roblox vai chamar
+// rota que o Roblox chama
 app.post("/chat", async (req, res) => {
   const userMessage = req.body.message || "";
   const userName = req.body.user || "Jogador";
 
-  // se NÃO tiver chave, não crasha: só responde uma msg de erro amigável
   if (!client) {
     return res.status(500).json({
       reply:
